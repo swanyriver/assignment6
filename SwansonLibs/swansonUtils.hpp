@@ -15,8 +15,10 @@
 #include <cmath>
 #include <list>
 #include <set>
+#include <string>
 using std::list;
 using std::set;
+using std::string;
 
 class swansonUtil {
 public:
@@ -29,6 +31,7 @@ public:
    static bool IsEqual ( float value1 , float value2 );
    static bool IsEqual ( double value1 , double value2 );
    static void ClearScreen ();
+   static void HackClearScreen ()
 
    //contains template method must be declared in class
    template<typename Type>
@@ -202,6 +205,21 @@ bool swansonUtil::IsEqual ( double value1 , double value2 ) {
  * ***************************************************************/
 void swansonUtil::ClearScreen () {
    system( "clear && printf '\e[3J'" );
+}
+
+/**************************************************************
+ *
+ * * Entry:none
+ *
+ * * Exit: 100 return characters to output stream
+ *
+ * * Purpose: obscure secret word
+ *
+ * ***************************************************************/
+void swansonUtil::HackClearScreen () {
+   string clearScrn = "";
+   clearScrn.append( 100 , '\n' );
+   std::cout << clearScrn;
 }
 
 #endif

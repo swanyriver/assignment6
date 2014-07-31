@@ -35,10 +35,14 @@ private:
    set<string>::iterator lookup;
 
 public:
-   set<string> GetSet () {
-      return wordSet;
-   } //temporary access for phrase game
-     //instead add AddWord() method, and others as needed!!!
+   void AddAlphabet(){
+      for(char letter='a';letter<='z';letter++){
+         wordSet.insert(swansonString::GetString(letter));
+      }
+   }
+   void AddWord(string word){
+      wordSet.insert(word);
+   }
 
 protected:
 
