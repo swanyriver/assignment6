@@ -1,0 +1,9 @@
+.cproject
+
+.project
+
+FUN*
+
+*.o
+
+template.cpp
