@@ -57,7 +57,7 @@ public:
       correctGuessDefault = "Good Job that was in the secret";
    }
 
-private:
+protected:
    virtual string GenerateSecret ( bool computerGen ) {
       string newSecret;
 
@@ -78,7 +78,10 @@ private:
    virtual bool ValidGuess ( string guess , string &message ,
          string &nextGuess ) {
       if ( !myDict.IsAWord( guess ) ) {
-         message = "That was not a letter or a word";
+         if(guess.length()>MAX_WORD_LENGTH)
+           message = "this word is too long";
+        else
+           message = "That was not a letter or a word";
          return false;
       } else if ( swansonUtil::ExistsInSet( guess , guessSet ) ) {
          message = "You have guessed this already";
@@ -103,17 +106,7 @@ private:
    }
 
    virtual bool GameWon () {
-      if ( guessesMade.back() == secret )
-         return true;
-
-      for ( int i = 0 ; i < secret.length() ; i++ ) {
-         if ( !swansonUtil::ExistsInSet(
-               swansonString::GetString( secret.at( i ) ) , guessSet ) )
-            return false;
-      }
-
-      return true;
-
+      return (GetRevealPhrase()==secret);
    }
 
    void LostGameDisplay();
@@ -129,7 +122,7 @@ private:
    }
    void Display ( string message );
    string LineWrap ( string output , int sideBarWidth , int DisplayWidth );
-
+   string GetRevealPhrase();
 
 
 };
@@ -204,16 +197,8 @@ void WordGuess::Display ( string message ) {
 
    //build secret word string
    secretPhraseLine = SECRET_PHRASE_LABEL;
+   string revealPhrase = GetRevealPhrase();
 
-   string revealPhrase;
-   for(int i=0;i<this->secret.length();i++){
-      if(secret.at(i)==' ') revealPhrase += " ";
-      else if(swansonUtil::ExistsInSet(secret.substr(i,1),guessSet)){
-         revealPhrase += secret.substr(i,1);
-      }else{
-         revealPhrase += "-";
-      }
-   }
 
    secretPhraseLine = LineWrap( secretPhraseLine + revealPhrase ,
          SIDEBAR_DISPLAY , WIDTH_DISPLAY );
@@ -332,6 +317,25 @@ void WordGuess::LostGameDisplay(){
    cout << LettersMissedLine << endl;
    cout << LINE_SEPERATE << endl;
 
+}
+
+string WordGuess::GetRevealPhrase(){
+   string revealPhrase;
+   for(int i=0;i<this->secret.length();i++){
+      if(secret.at(i)==' ') revealPhrase += " ";
+      else revealPhrase += "-";
+   }
+   for(list<string>::iterator it=guessesMade.begin();it!=guessesMade.end();it++){
+      int foundPos = 0;
+      while(foundPos!=string::npos){
+         foundPos = secret.find(*it,foundPos);
+         if(foundPos!=string::npos){
+            revealPhrase.replace(foundPos,it->length(),*it);
+            foundPos++;
+         }
+      }
+   }
+   return revealPhrase;
 }
 
 #endif /* WORDGUESS_HPP_ */

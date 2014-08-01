@@ -17,8 +17,12 @@ using namespace std;
 
 class PhraseGuess: public WordGuess{
 private:
-   const int MIN_WORDS = 3;
-   const int MAX_WORDS = 6; //todo make settable
+   static const int MIN_WORDS = 3;
+   static const int MAX_WORDS = 6; //todo make settable
+
+   static inline bool HasSpaces(string s){
+      return (!(s.find( ' ' ) == string::npos));
+   }
 
 public:
    PhraseGuess ( void (*clearScreen) () ) :
@@ -30,6 +34,7 @@ public:
    }
 
 private:
+
    string GenerateSecret(bool computerGen){
       string newSecret;
 
@@ -68,9 +73,49 @@ private:
    //virtual void Display(string message)=0;
    bool ValidGuess(string guess, string &message, string &nextGuess){
 
+      nextGuess=guess;
+
+      if ( swansonUtil::ExistsInSet( guess , guessSet ) ) {
+         message = "You have guessed this already";
+         return false;
+      }
+
+      if(!HasSpaces(guess)) { //single word or letter, check validity
+         if(myDict.IsAWord(guess)) return true;
+         else{
+            if(guess.length()>MAX_WORD_LENGTH)
+               message = "this word is too long";
+            else
+               message = "this is not a word or letter in my dictionary";
+            return false;
+         }
+      }
+
+      //check that each word in guess is valid
+      list<string> wordsInGuess;
+      swansonString::SeperateWords(guess,wordsInGuess);
+      while(!wordsInGuess.empty()){
+         if(!myDict.IsAWord(wordsInGuess.front())){
+            if(wordsInGuess.front().length()>MAX_WORD_LENGTH){
+               message = "at least one of these words is too long";
+            }else{
+               message = "at least one of these is not a word in my dictionary";
+            }
+            return false;
+         }
+         wordsInGuess.pop_front();
+      }
+
+      guessSet.insert(guess);
+      //todo check that not already revealed word
+      //todo remove letters only occuring in guessed words from set
+      return true;
+
    }
    //virtual bool GuessCorrect(string guess)=0;
-   bool GameWon() = 0;
+   /*bool GameWon(){
+      return (GetRevealPhrase()==secret);
+   }*/
    //virtual void GameOverDisplay(bool won) = 0;
 
 };

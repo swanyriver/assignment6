@@ -14,6 +14,7 @@
 
 #include "NumberGuess.hpp"
 #include "wordGuess.hpp"
+#include "phraseGuess.hpp"
 using namespace std;
 
 
@@ -49,6 +50,7 @@ private:
 
 int main(){
    //NumberGuess myGame(swansonUtil::ClearScreen, 100);
-   WordGuess myGame(swansonUtil::ClearScreen);
+   //WordGuess myGame(swansonUtil::ClearScreen);
+   PhraseGuess myGame(swansonUtil::ClearScreen);
    myGame.PlayGame(4);
 }
