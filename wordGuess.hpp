@@ -23,7 +23,6 @@ protected:
    static const int MAX_WORD_LENGTH = 7;
    Dictionary myDict;
    set<string> secretSet;
-   set<string> guessSet;
    string correctGuessDefault;
 
    void usePreFabDict () {
@@ -65,7 +64,6 @@ protected:
       newSecret = myDict.GetRandomWord();
 
       //fill secret set
-      guessSet.clear();
       secretSet.clear();
       secretSet.insert( newSecret );
       for ( int i = 0 ; i < newSecret.length() ; i++ ) {
@@ -88,7 +86,6 @@ protected:
          return false;
       } else {
          nextGuess = guess;
-         guessSet.insert( guess );
          return true;
       }
    }
@@ -233,8 +230,8 @@ void WordGuess::Display ( string message ) {
    wordGuessesMadeLine.append( SIDEBAR_DISPLAY , '*' );
    string guesses;
 
-   for ( list<string>::iterator lookup = guessesMade.begin();
-         lookup!=guessesMade.end() ; lookup++ ) {
+   for ( set<string>::iterator lookup = guessSet.begin();
+         lookup!=guessSet.end() ; lookup++ ) {
       if ( (*lookup).size() > 1 )
          guesses += *lookup + ", ";
    }
@@ -325,7 +322,7 @@ string WordGuess::GetRevealPhrase(){
       if(secret.at(i)==' ') revealPhrase += " ";
       else revealPhrase += "-";
    }
-   for(list<string>::iterator it=guessesMade.begin();it!=guessesMade.end();it++){
+   for(set<string>::iterator it=guessSet.begin();it!=guessSet.end();it++){
       int foundPos = 0;
       while(foundPos!=string::npos){
          foundPos = secret.find(*it,foundPos);

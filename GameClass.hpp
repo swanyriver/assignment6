@@ -8,7 +8,7 @@
 #ifndef GAMECLASS_HPP_
 #define GAMECLASS_HPP_
 
-#include <list>
+#include <set>
 #include "SwansonLibs/swansonInput.hpp"
 #include "SwansonLibs/swansonString.hpp"
 using namespace std;
@@ -17,7 +17,7 @@ template <typename Type>
 class GuessGame{
 protected:
    Type secret;
-   list<Type> guessesMade;
+   set<string> guessSet;
    string inputPrompt,welcomeMessage,correctGuess,IncorectGuess;
    static string YouWin, YouLoose;
    string nextGuessInput;
@@ -42,7 +42,7 @@ public:
 
    void PlayGame(int MaxGuesses){
       guessRemaining = MaxGuesses;
-      guessesMade.clear();
+      guessSet.clear();
       secret=GenerateSecret(ComputerGeneratedSecret);
 
       Display(welcomeMessage);
@@ -59,7 +59,7 @@ public:
             swansonString::LowerCasePreserve(nextGuessInput);
          }
 
-         guessesMade.push_back(nextGuess);
+         guessSet.insert(nextGuess);
 
          //check guess
          if(GuessCorrect(nextGuess)){

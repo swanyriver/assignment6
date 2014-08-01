@@ -49,7 +49,6 @@ private:
       newSecret = phrase;
 
       //fill secret set
-      guessSet.clear();
       secretSet.clear();
       //add secret phrase
       secretSet.insert( newSecret );
@@ -82,7 +81,6 @@ private:
 
       if(!HasSpaces(guess)) { //single word or letter, check validity
          if(myDict.IsAWord(guess)){
-            guessSet.insert(guess);
             return true;
          }
          else{
@@ -109,7 +107,6 @@ private:
          wordsInGuess.pop_front();
       }
 
-      guessSet.insert(guess);
 
       //todo check that not already revealed word
       //todo remove letters only occuring in guessed words from set

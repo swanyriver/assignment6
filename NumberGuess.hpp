@@ -83,7 +83,7 @@ private:
    }
 
    bool GameWon(){
-      if(guessesMade.back()==secret){
+      if(this->nextGuess==secret){
          return true;
       }
       else return false;
