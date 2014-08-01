@@ -107,7 +107,6 @@ private:
          wordsInGuess.pop_front();
       }
 
-
       //todo check that not already revealed word
       //todo remove letters only occuring in guessed words from set
       return true;
