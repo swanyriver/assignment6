@@ -98,6 +98,7 @@ private:
 
    void Display(string message){
       ClearScreen();
+      //todo, fix this!!
       cout << "message:" << message << endl;
       cout << "guesses remaining:" << guessRemaining<< endl;
 

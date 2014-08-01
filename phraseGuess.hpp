@@ -8,7 +8,7 @@
 #ifndef PHRASEGUESS_HPP_
 #define PHRASEGUESS_HPP_
 
-#include "wordGuess.hpp"
+#include "stringGuess.hpp"
 #include <string>
 #include "SwansonLibs/swansonString.hpp"
 #include "SwansonLibs/swansonUtils.hpp"
