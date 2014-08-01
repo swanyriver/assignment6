@@ -15,7 +15,7 @@
 
 using namespace std;
 
-class PhraseGuess: public WordGuess{
+class PhraseGuess: public StringGuess{
 private:
    static const int MIN_WORDS = 3;
    static const int MAX_WORDS = 5; //todo make settable
@@ -25,8 +25,8 @@ private:
    }
 
 public:
-   PhraseGuess ( void (*clearScreen) () ) :
-         WordGuess( clearScreen ) {
+   PhraseGuess ( void (*clearScreen) (), Dictionary dict , int maxLength ) :
+            StringGuess( clearScreen, dict, maxLength ){
 
       welcomeMessage = "Welcome to phrase guess good luck!";
       inputPrompt =

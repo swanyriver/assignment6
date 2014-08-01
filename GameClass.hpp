@@ -17,13 +17,14 @@ template <typename Type>
 class GuessGame{
 protected:
    Type secret;
-   set<string> guessSet;
+   set<Type> guessSet;
    string inputPrompt,welcomeMessage,correctGuess,IncorectGuess;
    static string YouWin, YouLoose;
    string nextGuessInput;
    Type nextGuess;
    string badInputMsg;
-   int guessRemaining;
+   int guessRemaining, MaxGuesses;
+   static const int MaxGuessDefault = 6;
    bool ComputerGeneratedSecret;
 
    //refresh terminal screen
@@ -38,9 +39,14 @@ protected:
 
 public:
 
-   GuessGame(void(*clearScreen)()):ClearScreen(clearScreen){};
+   GuessGame(void(*clearScreen)()):ClearScreen(clearScreen),
+      MaxGuesses(MaxGuessDefault){};
 
-   void PlayGame(int MaxGuesses){
+   void SetMaxGuesses(int maxGuesses){
+      MaxGuesses=maxGuesses;
+   }
+
+   void PlayGame(){
       guessRemaining = MaxGuesses;
       guessSet.clear();
       secret=GenerateSecret(ComputerGeneratedSecret);
