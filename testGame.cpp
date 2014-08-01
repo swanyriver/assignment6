@@ -9,9 +9,10 @@
 #include <iostream>
 #include <string>
 #include <iterator>
-#include "GameClass.hpp"
+
 #include "SwansonLibs/swansonUtils.hpp"
 
+#include "GameClass.hpp"
 #include "NumberGuess.hpp"
 #include "wordGuess.hpp"
 #include "phraseGuess.hpp"

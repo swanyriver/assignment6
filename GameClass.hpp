@@ -59,10 +59,11 @@ public:
             swansonString::LowerCasePreserve(nextGuessInput);
          }
 
+         bool correct = GuessCorrect(nextGuess);
          guessSet.insert(nextGuess);
 
          //check guess
-         if(GuessCorrect(nextGuess)){
+         if(correct){
             Display(correctGuess);
          }else{
             guessRemaining--;

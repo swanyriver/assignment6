@@ -48,25 +48,6 @@ private:
       phrase.erase( phrase.length() - 1 , 1 ); //remove extra space
       newSecret = phrase;
 
-      //fill secret set
-      secretSet.clear();
-      //add secret phrase
-      secretSet.insert( newSecret );
-
-      //add words
-      list<string> wordsInPhrase;
-      swansonString::SeperateWords(newSecret,wordsInPhrase);
-      while(!wordsInPhrase.empty()){
-         secretSet.insert(wordsInPhrase.front());
-         wordsInPhrase.pop_front();
-      }
-
-      //add letters
-      for ( int i = 0 ; i < newSecret.length() ; i++ ) {
-         if(newSecret.at(i)!=' ')
-         secretSet.insert( newSecret.substr(i,1) );
-      }
-
       return newSecret;
    }
    //virtual void Display(string message)=0;
@@ -75,13 +56,10 @@ private:
       nextGuess=guess;
 
       //check for already guessed
-      /*if ( swansonUtil::ExistsInSet( guess , guessSet ) ) {
-         message = "You have guessed this already";
-         return false;
-      }*/
-
-      if(swansonString::NumOccurances(GetRevealPhrase(),guess)>0 ||
-            swansonUtil::ExistsInSet( guess , guessSet )){
+      //or for words that have been fully revealed
+      if(swansonUtil::ExistsInSet( guess , guessSet )||
+            (swansonString::NumOccurances(GetRevealPhrase(),guess)>0 &&
+                  guess.length()>1)){
          message = "You have guessed this already";
          return false;
       }

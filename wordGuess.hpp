@@ -22,7 +22,6 @@ class WordGuess: public GuessGame<string> {
 protected:
    static const int MAX_WORD_LENGTH = 7;
    Dictionary myDict;
-   set<string> secretSet;
    string correctGuessDefault;
 
    void usePreFabDict () {
@@ -63,13 +62,6 @@ protected:
       //computer generated
       newSecret = myDict.GetRandomWord();
 
-      //fill secret set
-      secretSet.clear();
-      secretSet.insert( newSecret );
-      for ( int i = 0 ; i < newSecret.length() ; i++ ) {
-         secretSet.insert( swansonString::GetString( newSecret.at( i ) ) );
-      }
-
       return newSecret;
    }
 
@@ -90,9 +82,13 @@ protected:
       }
    }
 
-   virtual bool GuessCorrect ( string guess ) {
-      if ( swansonUtil::ExistsInSet( guess , secretSet ) ) {
-         int occurances=swansonString::NumOccurances(secret,guess);
+   bool GuessCorrect ( string guess ) {
+      int phraseOccurances=swansonString::NumOccurances(secret,guess);
+
+      int occurances = phraseOccurances
+            -swansonString::NumOccurances(GetRevealPhrase(),guess);
+
+      if ( occurances>0 ) {
          correctGuess=correctGuessDefault;
          if(occurances>1) this->correctGuess=this->correctGuessDefault +
                " " + swansonString::GetString(occurances) + " times";
@@ -102,7 +98,7 @@ protected:
       }
    }
 
-   virtual bool GameWon () {
+   bool GameWon () {
       return (GetRevealPhrase()==secret);
    }
 
@@ -299,7 +295,7 @@ void WordGuess::LostGameDisplay(){
 
    for ( char letter = 'a' ; letter <= 'z' ; letter++ ) {
       string charString = swansonString::GetString(letter);
-      if(swansonUtil::ExistsInSet(charString,secretSet) &&
+      if(swansonString::NumOccurances(secret,charString)>0 &&
             !swansonUtil::ExistsInSet(charString,guessSet))
       LettersMissedLine += charString + " ";
    }
