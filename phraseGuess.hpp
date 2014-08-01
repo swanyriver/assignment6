@@ -18,7 +18,7 @@ using namespace std;
 class PhraseGuess: public WordGuess{
 private:
    static const int MIN_WORDS = 3;
-   static const int MAX_WORDS = 6; //todo make settable
+   static const int MAX_WORDS = 5; //todo make settable
 
    static inline bool HasSpaces(string s){
       return (!(s.find( ' ' ) == string::npos));
@@ -81,7 +81,10 @@ private:
       }
 
       if(!HasSpaces(guess)) { //single word or letter, check validity
-         if(myDict.IsAWord(guess)) return true;
+         if(myDict.IsAWord(guess)){
+            guessSet.insert(guess);
+            return true;
+         }
          else{
             if(guess.length()>MAX_WORD_LENGTH)
                message = "this word is too long";
@@ -107,16 +110,13 @@ private:
       }
 
       guessSet.insert(guess);
+
       //todo check that not already revealed word
       //todo remove letters only occuring in guessed words from set
       return true;
 
    }
-   //virtual bool GuessCorrect(string guess)=0;
-   /*bool GameWon(){
-      return (GetRevealPhrase()==secret);
-   }*/
-   //virtual void GameOverDisplay(bool won) = 0;
+
 
 };
 
