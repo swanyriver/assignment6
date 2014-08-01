@@ -74,15 +74,24 @@ private:
 
       nextGuess=guess;
 
-      if ( swansonUtil::ExistsInSet( guess , guessSet ) ) {
+      //check for already guessed
+      /*if ( swansonUtil::ExistsInSet( guess , guessSet ) ) {
+         message = "You have guessed this already";
+         return false;
+      }*/
+
+      if(swansonString::NumOccurances(GetRevealPhrase(),guess)>0 ||
+            swansonUtil::ExistsInSet( guess , guessSet )){
          message = "You have guessed this already";
          return false;
       }
 
       if(!HasSpaces(guess)) { //single word or letter, check validity
+         //check that it is a valid word
          if(myDict.IsAWord(guess)){
             return true;
          }
+         //determine if it is too long or just not in the dictionary
          else{
             if(guess.length()>MAX_WORD_LENGTH)
                message = "this word is too long";
@@ -107,8 +116,7 @@ private:
          wordsInGuess.pop_front();
       }
 
-      //todo check that not already revealed word
-      //todo remove letters only occuring in guessed words from set
+      //each word in guessed phrase is valid
       return true;
 
    }
