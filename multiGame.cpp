@@ -24,7 +24,7 @@
 using namespace std;
 
 //command line arguments
-const string SIMPLE_MODE = "-d";
+const string SIMPLE_MODE = "-s";
 
 //Output Strings
 const string INTRO = "Welcome to the Game Console";
@@ -49,15 +49,16 @@ int main( int argc , char* argv[] ){
    Menu myMenu(INTRO);
 
    ///process command line arguments//////////////
-   //args and ControlFlags passed to ARGinAttor
+   //args passed to ARGinAttor
    ARGinAttor myARGinAttor( argc , argv);
-
    //check Arginators arguement set<string> for -s SIMPLE MODE
    if(myARGinAttor.ArgumentPassedIn(SIMPLE_MODE)){
       clearScreen=swansonUtil::HackClearScreen;
       myMenu.setClear(clearScreen);
    }
 
+   //seed random
+   swansonUtil::SeedRandom();
 
 
    Dictionary myDict(MAX_WORD_LENGTH);

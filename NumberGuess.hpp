@@ -26,8 +26,7 @@ public:
    :GuessGame<int>(clearScreen),numRange(numrange){
       secretNumberPrompt = "What should the secret number between [1-" +
             swansonString::GetString(numRange) + "] be:";
-      inputPrompt= "What is your next guess between [1-" +
-            swansonString::GetString(numRange) + "]:";
+      inputPrompt= "What is your next guess:";
       welcomeMessage= "Welcome to number guess Good luck!";
       rangeBegining=1;
       rangeEnd=numrange;
@@ -75,9 +74,6 @@ private:
             this->IncorectGuess = "That guess was too high";
             rangeEnd = guess-1;
          }
-         inputPrompt= "What is your next guess between [" +
-               swansonString::GetString(rangeBegining)+"-" +
-               swansonString::GetString(rangeEnd) + "]:";
          return false;
       }
    }
@@ -93,15 +89,20 @@ private:
       if(won)
          Display(this->YouWin+ " it was " + swansonString::GetString(secret));
       else
-         Display(this->YouLoose);
+         Display(this->YouLoose+ " it was " + swansonString::GetString(secret));
    }
 
    void Display(string message){
       ClearScreen();
       //todo, fix this!!
-      cout << "message:" << message << endl;
-      cout << "guesses remaining:" << guessRemaining<< endl;
 
+      string remainingStr;
+      for(int x=0;x<guessRemaining;x++) remainingStr+= " ?";
+
+      cout << "guesses remaining:" << remainingStr << endl;
+      cout << "The number is somwhere between " << rangeBegining-1
+            << " and " << rangeEnd+1 << endl;
+      cout << message << endl;
    }
 
 };
