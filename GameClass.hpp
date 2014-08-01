@@ -10,6 +10,7 @@
 
 #include <list>
 #include "SwansonLibs/swansonInput.hpp"
+#include "SwansonLibs/swansonString.hpp"
 using namespace std;
 
 template <typename Type>
@@ -49,11 +50,13 @@ public:
       do {
          //get a guess from user
          nextGuessInput = swansonInput::GetString(inputPrompt);
+         swansonString::LowerCasePreserve(nextGuessInput);
 
          //ensure it is a proper guess
          while(!ValidGuess(nextGuessInput, badInputMsg, nextGuess)){
             Display( badInputMsg );
             nextGuessInput = swansonInput::GetString(inputPrompt);
+            swansonString::LowerCasePreserve(nextGuessInput);
          }
 
          guessesMade.push_back(nextGuess);

@@ -18,13 +18,13 @@
 
 using namespace std;
 
-class WordGuess:public GuessGame<string>{
-private:
-   static const int MAX_WORD_LENGTH=7;
+class WordGuess: public GuessGame<string> {
+protected:
+   static const int MAX_WORD_LENGTH = 7;
    Dictionary myDict;
    set<string> secretSet;
    set<string> guessSet;
-
+   string correctGuessDefault;
 
    void usePreFabDict () {
       myDict = Dictionary( PreFabDict::getSet() );
@@ -44,20 +44,21 @@ private:
    }
 
 public:
-   WordGuess(void(*clearScreen)()):GuessGame(clearScreen){
-      myDict = Dictionary(MAX_WORD_LENGTH);
+   WordGuess ( void (*clearScreen) () ) :
+         GuessGame( clearScreen ) {
+      myDict = Dictionary( MAX_WORD_LENGTH );
       if ( !myDict.Filled() )
-               usePreFabDict();
+         usePreFabDict();
       myDict.AddAlphabet();
 
-      welcomeMessage= "Welcome to word guess Good luck!";
-      inputPrompt= "Enter a letter or be brave and try to guess the word:";
-      this->correctGuess = "correct";
-      this->IncorectGuess= "incorrect";
+      this->welcomeMessage = "Welcome to word guess good luck!";
+      this->inputPrompt = "Enter a letter or be brave and try to guess the word:";
+      this->IncorectGuess = "That was incorrect";
+      correctGuessDefault = "Good Job that was in the secret";
    }
 
 private:
-   virtual string GenerateSecret(bool computerGen){
+   virtual string GenerateSecret ( bool computerGen ) {
       string newSecret;
 
       //computer generated
@@ -66,42 +67,48 @@ private:
       //fill secret set
       guessSet.clear();
       secretSet.clear();
-      secretSet.insert(newSecret);
-      for(int i=0;i<newSecret.length(); i++){
-         secretSet.insert(swansonString::GetString(newSecret.at(i)));
+      secretSet.insert( newSecret );
+      for ( int i = 0 ; i < newSecret.length() ; i++ ) {
+         secretSet.insert( swansonString::GetString( newSecret.at( i ) ) );
       }
 
       return newSecret;
    }
 
-   virtual bool ValidGuess(string guess, string &message, string &nextGuess){
-      if(!myDict.IsAWord(guess)){
+   virtual bool ValidGuess ( string guess , string &message ,
+         string &nextGuess ) {
+      if ( !myDict.IsAWord( guess ) ) {
          message = "That was not a letter or a word";
          return false;
-      }else if(swansonUtil::ExistsInSet(guess,guessSet)){
+      } else if ( swansonUtil::ExistsInSet( guess , guessSet ) ) {
          message = "You have guessed this already";
          return false;
-      }
-      else {
-         nextGuess=guess;
-         guessSet.insert(guess);
+      } else {
+         nextGuess = guess;
+         guessSet.insert( guess );
          return true;
       }
    }
 
-   virtual bool GuessCorrect(string guess){
-      if(swansonUtil::ExistsInSet(guess,secretSet)){
+   virtual bool GuessCorrect ( string guess ) {
+      if ( swansonUtil::ExistsInSet( guess , secretSet ) ) {
+         int occurances=swansonString::NumOccurances(secret,guess);
+         correctGuess=correctGuessDefault;
+         if(occurances>1) this->correctGuess=this->correctGuessDefault +
+               " " + swansonString::GetString(occurances) + " times";
          return true;
       } else {
          return false;
       }
    }
 
-   virtual bool GameWon(){
-      if(guessesMade.back()==secret) return true;
+   virtual bool GameWon () {
+      if ( guessesMade.back() == secret )
+         return true;
 
-      for(int i=0;i<secret.length();i++){
-         if(!swansonUtil::ExistsInSet(swansonString::GetString(secret.at(i)),guessSet))
+      for ( int i = 0 ; i < secret.length() ; i++ ) {
+         if ( !swansonUtil::ExistsInSet(
+               swansonString::GetString( secret.at( i ) ) , guessSet ) )
             return false;
       }
 
@@ -109,24 +116,222 @@ private:
 
    }
 
-   virtual void Display(string message){
-      ClearScreen();
-      cout << "message:" << message << endl;
-      cout << "secret is:" << secret << endl;
-      cout << "last guess: " << guessesMade.back() << endl; //error on first display
-     /* if(GuessCorrect(guessesMade.back())){
-         cout << " correct";
-      }*/
-   }
+   void LostGameDisplay();
+   void GameOverDisplay ( bool won ) {
+      if ( won )
+         Display( YouWin );
+      else{
+         Display( YouLoose );
+         LostGameDisplay();
+      }
 
-   virtual void GameOverDisplay(bool won){
-      if(won)Display(YouWin);
-      else Display(YouLoose);
 
    }
+   void Display ( string message );
+   string LineWrap ( string output , int sideBarWidth , int DisplayWidth );
+
+
 
 };
 
+///special display/////////////////
 
+const int WIDTH_DISPLAY = 75;
+const int SIDEBAR_DISPLAY = 21;
+
+#define LINE_SEPERATE "***************************************************************************"
+#define SECRET_PHRASE_LABEL   "*      SECRET       * "
+#define GUESS_MADE_LABEL      "*   GUESSES MADE    * "
+#define LETTERS_LABEL "* LETTERS AVAILABLE * "
+#define GUESS_REMAINING_LABEL "* GUESSES REMAINING * "
+
+#define LETTERS_UNREAVEALED_LABEL "*  WHAT'S MISSING   * "
+#define REVEAL_WORD_LABEL         "*    SECRET WAS     * "
+
+//////////////////////////////
+
+/**************************************************************
+ *
+ * Entry: string with ' ' as delimiter
+ *
+ * Exit: multi line strings
+ *
+ * Purpose: format strings to word wrap on multi lines
+ *
+ * ***************************************************************/
+
+string WordGuess::LineWrap ( string output , int sideBarWidth , int DisplayWidth ) {
+   //cout << "coming into linewrap with:" << output << endl;
+
+   if ( output.length() < DisplayWidth ) {
+      output.append( DisplayWidth - output.size() - 1 , ' ' );
+      output += "*";
+      return output;
+   } else {
+      int lastSpace = output.find_last_of( ' ' , DisplayWidth - 1 );
+      string thisLine = output.substr( 0 , lastSpace );
+      output.erase( 0 , lastSpace );
+
+      //cout << "output:" << output << endl << "thisline:" << thisLine << endl;
+      //cout << "remaining space:" << DisplayWidth -  thisLine.size() - 1;
+      //getchar();
+
+      thisLine.append( DisplayWidth - thisLine.size() - 1 , ' ' );
+      thisLine += "*\n";
+
+      output.insert( 0 , sideBarWidth , '*' );
+
+      return thisLine + LineWrap( output , sideBarWidth , DisplayWidth );
+   }
+}
+
+/**************************************************************
+ *
+ * Entry: none
+ *
+ * Exit: outputs the letters reveled in the secret word and guesses remaining
+ *
+ * Purpose: inform player 2 of his status in the game
+ *
+ * ***************************************************************/
+
+void WordGuess::Display ( string message ) {
+
+   string secretPhraseLine, lettersLine, guessesLine, guessRemainingLine;
+   string lettersRemainingLine, phraseRevealLine;
+   string messageLine;
+   string wordGuessesMadeLine;
+
+   //build secret word string
+   secretPhraseLine = SECRET_PHRASE_LABEL;
+
+   string revealPhrase;
+   for(int i=0;i<this->secret.length();i++){
+      if(secret.at(i)==' ') revealPhrase += " ";
+      else if(swansonUtil::ExistsInSet(secret.substr(i,1),guessSet)){
+         revealPhrase += secret.substr(i,1);
+      }else{
+         revealPhrase += "-";
+      }
+   }
+
+   secretPhraseLine = LineWrap( secretPhraseLine + revealPhrase ,
+         SIDEBAR_DISPLAY , WIDTH_DISPLAY );
+
+   /*cout << endl << secretPhraseLine << endl;
+    getchar();*/
+
+   //build letters available & guesses made string
+   lettersLine = LETTERS_LABEL;
+   guessesLine = GUESS_MADE_LABEL;
+   for ( char currentChar = 'a' ; currentChar <= 'z' ; currentChar++ ) {
+
+      //for each letter place a letter or empty space, acording to guesses
+      if ( swansonUtil::ExistsInSet( swansonString::GetString( currentChar ) ,
+            guessSet ) ) {
+         guessesLine.push_back( currentChar );
+         guessesLine += " ";
+         lettersLine += "  ";
+      } else {
+         lettersLine.push_back( currentChar );
+         lettersLine += " ";
+         guessesLine += "  ";
+      }
+   }
+   guessesLine += "*";
+   lettersLine += "*";
+
+   /*cout << endl << guessesLine << endl;
+    cout << endl << lettersLine << endl;
+    getchar();*/
+
+   wordGuessesMadeLine.append( SIDEBAR_DISPLAY , '*' );
+   string guesses;
+
+   for ( list<string>::iterator lookup = guessesMade.begin();
+         lookup!=guessesMade.end() ; lookup++ ) {
+      if ( (*lookup).size() > 1 )
+         guesses += *lookup + ", ";
+   }
+   if ( guesses.empty() )
+      wordGuessesMadeLine.append( WIDTH_DISPLAY - SIDEBAR_DISPLAY , '*' );
+   else {
+      guesses.erase( guesses.size() - 2 , 2 ); //remove final ", "
+      wordGuessesMadeLine = LineWrap( wordGuessesMadeLine + " " + guesses ,
+            SIDEBAR_DISPLAY , WIDTH_DISPLAY );
+   }
+   //allow display to grow if words get larger than one line
+
+   //build guesses remaining string
+   guessRemainingLine = GUESS_REMAINING_LABEL;
+   for ( int i = 0 ; i < guessRemaining ; i++ ) {
+      guessRemainingLine += "? ";
+   }
+   guessRemainingLine = LineWrap( guessRemainingLine , SIDEBAR_DISPLAY ,
+         WIDTH_DISPLAY );
+
+   /* cout << endl << guessRemainingLine << endl;
+    getchar();*/
+
+   //build message line
+   messageLine = LINE_SEPERATE;
+   if ( !message.empty() ) {
+      message = "  " + message + "  ";
+      int pos = WIDTH_DISPLAY / 2.0 - message.length() / 2.0;
+      messageLine.replace( pos , message.size() , message );
+   }
+
+   /*cout << endl << messageLine << endl;
+    getchar();*/
+
+   //output display
+   ClearScreen();
+   cout << LINE_SEPERATE << endl;
+   cout << LINE_SEPERATE << endl;
+   cout << secretPhraseLine << endl;
+   cout << LINE_SEPERATE << endl;
+   cout << lettersLine << endl;
+   cout << LINE_SEPERATE << endl;
+   cout << guessesLine << endl;
+   cout << LINE_SEPERATE << endl;
+   cout << wordGuessesMadeLine << endl;
+   cout << LINE_SEPERATE << endl;
+   cout << guessRemainingLine << endl;
+   cout << LINE_SEPERATE << endl;
+   cout << messageLine << endl;
+   cout << LINE_SEPERATE << endl;
+
+
+
+}
+
+
+void WordGuess::LostGameDisplay(){
+
+
+   string LettersMissedLine = LETTERS_UNREAVEALED_LABEL;
+   string secretPhraseLine = REVEAL_WORD_LABEL + secret;
+
+   //set<string> missed = GuessChecker::ElementsMissed( secretPhrase , guesses );
+
+
+   for ( char letter = 'a' ; letter <= 'z' ; letter++ ) {
+      string charString = swansonString::GetString(letter);
+      if(swansonUtil::ExistsInSet(charString,secretSet) &&
+            !swansonUtil::ExistsInSet(charString,guessSet))
+      LettersMissedLine += charString + " ";
+   }
+
+   LettersMissedLine = LineWrap( LettersMissedLine , SIDEBAR_DISPLAY ,
+         WIDTH_DISPLAY );
+   secretPhraseLine = LineWrap( secretPhraseLine , SIDEBAR_DISPLAY ,
+         WIDTH_DISPLAY );
+
+   cout << secretPhraseLine << endl;
+   cout << LINE_SEPERATE << endl;
+   cout << LettersMissedLine << endl;
+   cout << LINE_SEPERATE << endl;
+
+}
 
 #endif /* WORDGUESS_HPP_ */
