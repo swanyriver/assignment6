@@ -26,7 +26,7 @@ protected:
 
 public:
    StringGuess ( void (*clearScreen) (), Dictionary dict , int maxLength ) :
-         GuessGame( clearScreen ), myDict(dict),MAX_WORD_LENGTH(maxLength) {
+         GuessGame<string>(clearScreen ), myDict(dict),MAX_WORD_LENGTH(maxLength) {
 
       myDict.AddAlphabet();
 
