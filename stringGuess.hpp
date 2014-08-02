@@ -9,6 +9,7 @@
 #define STRINGGUESS_HPP_
 
 #include "SwansonObjects/Dictionary.hpp"
+#include "SwansonLibs/swansonInput.hpp"
 #include "GameClass.hpp"
 
 #include <string>
@@ -21,17 +22,21 @@ using namespace std;
 class StringGuess: public GuessGame<string> {
 protected:
    const int MAX_WORD_LENGTH;
+   static const int USER_MIN_LENGTH = 4;
    Dictionary myDict;
    string correctGuessDefault;
+   string secretPrompt;
 
 public:
    StringGuess ( void (*clearScreen) (), Dictionary dict , int maxLength ) :
-         GuessGame<string>(clearScreen ), myDict(dict),MAX_WORD_LENGTH(maxLength) {
+         GuessGame<string>(clearScreen ), myDict(dict),
+         MAX_WORD_LENGTH(maxLength){
 
       myDict.AddAlphabet();
 
-      this->IncorectGuess = "That was incorrect";
+      IncorectGuess = "That was incorrect";
       correctGuessDefault = "Good Job that was in the secret";
+      secretPrompt = "What should the secret be:";
    }
 
 protected:
@@ -39,6 +44,24 @@ protected:
 
    virtual bool ValidGuess ( string guess , string &message ,
          string &nextGuess ) = 0;
+
+   string UserInputSecret(int minLength, int MaxLength ){
+      string secretIn = swansonInput::GetString(secretPrompt);
+      string message;
+
+      while(!ValidGuess(secretIn,message,secretIn ) ||
+            secret.length()<minLength || secret.length()>MaxLength){
+         if(secret.length()<minLength)
+            message = "that was too short";
+         else if(secret.length()>MaxLength)
+            message = "that was too long";
+
+         cout << message << endl;
+         secretIn = swansonInput::GetString(secretPrompt);
+      }
+
+      return secretIn;
+   }
 
    bool GuessCorrect ( string guess ) {
       int phraseOccurances=swansonString::NumOccurances(secret,guess);
@@ -74,6 +97,7 @@ protected:
    void Display ( string message );
    string LineWrap ( string output , int sideBarWidth , int DisplayWidth );
    string GetRevealPhrase();
+
 
 
 };

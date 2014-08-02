@@ -26,7 +26,8 @@ private:
       string newSecret;
 
       //computer generated
-      newSecret = myDict.GetRandomWord();
+      if(computerGen) newSecret = myDict.GetRandomWord();
+      else newSecret = UserInputSecret(USER_MIN_LENGTH,MAX_WORD_LENGTH);
 
       return newSecret;
    }

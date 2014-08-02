@@ -38,7 +38,10 @@ private:
    string GenerateSecret(bool computerGen){
       string newSecret;
 
-      //computer generated
+      if(!computerGen)
+         return UserInputSecret(USER_MIN_LENGTH * MIN_WORDS,
+               MAX_WORD_LENGTH * MAX_WORDS);
+
       //use dictionary to make phrase
       string phrase;
       int numWords = swansonUtil::GetRandomInRange( MIN_WORDS , MAX_WORDS );
