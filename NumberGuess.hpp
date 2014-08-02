@@ -100,7 +100,7 @@ private:
       for(int x=0;x<guessRemaining;x++) remainingStr+= " ?";
 
       cout << "guesses remaining:" << remainingStr << endl;
-      cout << "The number is somwhere between " << rangeBegining-1
+      cout << "The number is somewhere between " << rangeBegining-1
             << " and " << rangeEnd+1 << endl;
       cout << message << endl;
    }

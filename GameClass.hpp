@@ -24,7 +24,8 @@ protected:
    Type nextGuess;
    string badInputMsg;
    int guessRemaining, MaxGuesses;
-   static const int MaxGuessDefault = 6;
+   //static const int MaxGuessDefault = 6; todo put back to 6
+   static const int MaxGuessDefault = 2;
    bool ComputerGeneratedSecret;
 
    //refresh terminal screen

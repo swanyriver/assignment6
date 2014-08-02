@@ -98,6 +98,15 @@ public:
 
    MenuItem* GetLastItem(){return menuItems.back();}
 
+   void RunSelection(MenuItem *selected){
+      do {
+            if ( selected->hasIntro )
+               cout << endl << selected->intro << endl;
+            selected->ItemSelected();
+         } while ( selected->itemRepeat
+               && swansonInput::yesNo( selected->repeatpromt ) );
+   }
+
    //display menu options and prompt for selection
    void showMenu ( bool withIntro = true ) {
       int demoItemNumber = -1;
@@ -132,11 +141,11 @@ public:
          //execute selection
          if ( selection == demoItemNumber ) { //demo all
             for ( int i = 0 ; i < menuItems.size() ; i++ )
-               menuItems.at( i )->ItemSelected();
+               RunSelection(menuItems.at( i ));
          } else if ( selection == exitItemNumber ) {
             menuRepeat = false;
          } else {
-            menuItems.at( selection - 1 )->ItemSelected();
+            RunSelection(menuItems.at( selection - 1 ));
          }
 
       } while ( menuRepeat ); //repeat menu
@@ -153,10 +162,10 @@ public:
 
             if ( selectionNumber == 0 ) { //demo all
                for ( int i = 0 ; i < menuItems.size() ; i++ )
-                  menuItems.at( i )->ItemSelected();
+                  RunSelection(menuItems.at( i ));
             } else if ( selectionNumber > 0
                   && selectionNumber <= menuItems.size() ) {
-               menuItems.at( selectionNumber - 1 )->ItemSelected();
+               RunSelection(menuItems.at( selectionNumber - 1 ));
             }
 
          }
@@ -181,21 +190,39 @@ public:
    }
 
    void ItemSelected(){
-      do {
-         if ( hasIntro )
-            cout << endl << intro << endl;
-         myFunction();
-      } while ( itemRepeat && swansonInput::yesNo( repeatpromt ) );
+      myFunction();
    }
 };
-#endif /*MENU_HPP_ */
 
 
-/* virtual void ItemSelected () {
-      do {
-         if ( hasIntro )
-            cout << endl << intro << endl;
-         myFunction();
-      } while ( itemRepeat && swansonInput::yesNo( repeatpromt ) );
+///////////boolean item
+
+class BoolItem:public MenuItem{
+private:
+   bool *myBool;
+   string trueStr, falseStr, titleBase;
+
+   string getStateString(){
+      if(*myBool) return " [" + trueStr + "]";
+      else return " [" + falseStr + "]";
    }
-   */
+
+public:
+   BoolItem (bool &boolIn, string titleIn, string tstr, string fstr):
+      MenuItem("",""),myBool(&boolIn),
+      titleBase(titleIn),trueStr(tstr),falseStr(fstr){
+
+      itemRepeat=false;
+      hasIntro=false;
+
+      this->title=titleBase+getStateString();
+   }
+
+   void ItemSelected(){
+      *myBool = !*myBool;
+      title=titleBase+getStateString();
+   }
+
+};
+
+#endif /*MENU_HPP_ */
