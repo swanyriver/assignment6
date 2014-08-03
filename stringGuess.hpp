@@ -46,21 +46,21 @@ protected:
          string &nextGuess ) = 0;
 
    string UserInputSecret(int minLength, int MaxLength ){
-      string secretIn = swansonInput::GetString(secretPrompt);
+      string userSecret = swansonInput::GetString(secretPrompt);
       string message;
 
-      while(!ValidGuess(secretIn,message,secretIn ) ||
-            secret.length()<minLength || secret.length()>MaxLength){
-         if(secret.length()<minLength)
+      while(!ValidGuess(userSecret,message,userSecret ) ||
+            userSecret.length()<minLength || userSecret.length()>MaxLength){
+         if(userSecret.length()<minLength)
             message = "that was too short";
-         else if(secret.length()>MaxLength)
+         else if(userSecret.length()>MaxLength)
             message = "that was too long";
 
          cout << message << endl;
-         secretIn = swansonInput::GetString(secretPrompt);
+         userSecret = swansonInput::GetString(secretPrompt);
       }
 
-      return secretIn;
+      return userSecret;
    }
 
    bool GuessCorrect ( string guess ) {
