@@ -39,15 +39,15 @@ ListItem *DifficultyChooser;
 bool ComputerGenerated = true;
 Dictionary myDict;
 
-//difficulty
+//difficulty variables
 const string EASY = "Easy";
 const string MED = "Medium";
 const string HARD = "Hard";
 string DifficultySelected = MED;
 
 const int EASY_GUESS = 7;
-const int MED_GUESS = 6;
-const int HARD_GUESS = 5;
+const int MED_GUESS = 5;
+const int HARD_GUESS = 3;
 
 const int EASY_NUMBER = 20;
 const int MED_NUMBER = 50;
@@ -57,11 +57,20 @@ const int EASY_WORD = 5;
 const int MED_WORD = 7;
 const int HARD_WORD = 8;
 
-//function prototypes
+/////////////////////////////////////////
+///////////////function prototypes//////
+////////////////////////////////////////
+
+//begin number guess game
 void PlayNumberGuess ();
+//begin word guess game
 void PlayWordGuess ();
+//begin Phrase guess game
 void PlayPhraseGuess ();
+//change settings in all 3 games according to difficulty
+//selected by menu and retrieved through DifficultyChooser->getSelection
 void ChangeDifficulty ();
+//Instantiate a new dictionary, max length is changed for different difficulties
 void SetDictionary ( int maxLength );
 
 int main ( int argc , char* argv[] ) {
@@ -112,19 +121,51 @@ int main ( int argc , char* argv[] ) {
 
 }
 
-//function definitions
+/////////////////////////////////////////
+///////////////function definitions//////
+////////////////////////////////////////
+
+/**************************************************************
+ *
+ * * Entry: an instance of NumberGame pointed to by myNumberGame
+ *
+ * * Exit: PlayGame() function is entered
+ *
+ * * Purpose: apply menu selected setting and begin the game
+ *
+ * ***************************************************************/
 void PlayNumberGuess () {
    myNumberGame->SetComputerGeneratedSecret( ComputerGenerated );
    if ( DifficultySelected != DifficultyChooser->GetSelection() )
       ChangeDifficulty();
    myNumberGame->PlayGame();
 }
+
+/**************************************************************
+ *
+ * * Entry: an instance of WordGame pointed to by myWordGame
+ *
+ * * Exit: PlayGame() function is entered
+ *
+ * * Purpose: apply menu selected setting and begin the game
+ *
+ * ***************************************************************/
 void PlayWordGuess () {
    myWordGame->SetComputerGeneratedSecret( ComputerGenerated );
    if ( DifficultySelected != DifficultyChooser->GetSelection() )
       ChangeDifficulty();
    myWordGame->PlayGame();
 }
+
+/**************************************************************
+ *
+ * * Entry: an instance of PhraseGame pointed to by myPhraseGame
+ *
+ * * Exit: PlayGame() function is entered
+ *
+ * * Purpose: apply menu selected setting and begin the game
+ *
+ * ***************************************************************/
 void PlayPhraseGuess () {
    myPhraseGame->SetComputerGeneratedSecret( ComputerGenerated );
    if ( DifficultySelected != DifficultyChooser->GetSelection() )
@@ -132,6 +173,18 @@ void PlayPhraseGuess () {
    myPhraseGame->PlayGame();
 }
 
+/**************************************************************
+ *
+ * * Entry: DifficultyChooser points to an instance of ListItem containing
+ *          A list of the strings {EASY,MED,HARD}
+ *
+ * * Exit: GuessNummber is adjusted for all 3 games
+ *         A new dictionary is created with appropriate word length
+ *         number range is adjusted for numberGame
+ *
+ * * Purpose: apply menu selected difficulty settings
+ *
+ * ***************************************************************/
 void ChangeDifficulty () {
    DifficultySelected = DifficultyChooser->GetSelection();
 
@@ -168,6 +221,15 @@ void ChangeDifficulty () {
    }
 }
 
+/**************************************************************
+ *
+ * * Entry: none
+ *
+ * * Exit: inflated dictionary with maxLength as its longest word(s)
+ *
+ * * Purpose: change word length to match difficulty
+ *
+ * ***************************************************************/
 void SetDictionary ( int maxLength ) {
    myDict = Dictionary( maxLength );
    if ( !myDict.Filled() )
