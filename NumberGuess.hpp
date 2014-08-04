@@ -20,19 +20,29 @@ private:
    int numRange;
    int rangeBegining, rangeEnd;
    string secretNumberPrompt;
+   static const int DefaultNumRange = 50;
 
 public:
-   NumberGuess( int numrange ): numRange(numrange){
+   NumberGuess(): numRange(DefaultNumRange){
       secretNumberPrompt = "What should the secret number between [1-" +
             swansonString::GetString(numRange) + "] be:";
       inputPrompt= "What is your next guess:";
       welcomeMessage= "Welcome to number guess Good luck!";
       rangeBegining=1;
-      rangeEnd=numrange;
+      rangeEnd=numRange;
    }
+
+   void SetNumRange(int range){
+      numRange=range;
+      rangeEnd=numRange;
+   }
+
 private:
 
    int GenerateSecret(bool computerGen){
+      rangeBegining=1;
+      rangeEnd=numRange;
+
       if(computerGen){
          return swansonUtil::GetRandomInRange(1,numRange);
       }else{
