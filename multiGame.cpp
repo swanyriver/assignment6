@@ -13,7 +13,7 @@
 #include "SwansonObjects/ArgReader.hpp"
 #include "SwansonObjects/menu.hpp"
 #include "SwansonObjects/Dictionary.hpp"
-#include "PreFabDictionary.hpp"
+#include "SwansonObjects/PreFabDictionary.hpp"
 
 #include "NumberGuess.hpp"
 #include "wordGuess.hpp"
@@ -36,7 +36,6 @@ PhraseGuess *myPhraseGame;
 bool ComputerGenerated = true;
 
 //function prototypes
-void usePreFabDict (Dictionary &myDict);
 void PlayNumberGuess();
 void PlayWordGuess();
 void PlayPhraseGuess();
@@ -62,7 +61,7 @@ int main( int argc , char* argv[] ){
 
    Dictionary myDict(MAX_WORD_LENGTH);
    if ( !myDict.Filled() )
-      usePreFabDict(myDict);
+      myDict = PreFabDict::UsePreFabDict();
 
    myNumberGame = new NumberGuess(clearScreen,50);
    myWordGame = new WordGuess(clearScreen,myDict);
@@ -97,19 +96,4 @@ void PlayPhraseGuess(){
    myPhraseGame->PlayGame();
 }
 
-void usePreFabDict (Dictionary &myDict) {
-   myDict = Dictionary( PreFabDict::getSet() );
 
-   if ( myDict.Filled() ) {
-      cout << endl
-            << "something strange has happened, we had an empty dictionary"
-            << " but don't worry, we can still play with my limited stored vocabulary";
-      cout << endl << "press anything to continue:";
-      getchar();
-   } else {
-      cout << endl
-            << "something has gone very wrong here, we have no words, we cannot play";
-      cout << endl << "press anything to exit:";
-      exit( 1 );
-   }
-}

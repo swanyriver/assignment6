@@ -10,9 +10,13 @@
 
 #include <string>
 #include <set>
+#include "Dictionary.hpp"
+#include <iostream>
+#include <cstdio>
 
 using std::string;
 using std::set;
+using std::cout;
 
 class PreFabDict{
 private:
@@ -20,9 +24,25 @@ private:
    //int numWords;
 
 public:
-   /*PreFabDict(){
-      numWords=14;
-   }*/
+
+   static Dictionary UsePreFabDict () {
+       Dictionary myDict( PreFabDict::getSet() );
+
+      if ( myDict.Filled() ) {
+         cout << endl
+               << "something strange has happened, we had an empty dictionary"
+               << " but don't worry, we can still play with my limited stored vocabulary";
+         cout << endl << "press anything to continue:";
+         getchar();
+         return myDict;
+      } else {
+         cout << endl
+               << "something has gone very wrong here, we have no words, we cannot play";
+         getchar();
+         exit( 1 );
+      }
+   }
+
    static set<string> getSet(){
 
       int numWords=999;
