@@ -46,6 +46,8 @@ private:
       if(computerGen){
          return swansonUtil::GetRandomInRange(1,numRange);
       }else{
+         secretNumberPrompt = "What should the secret number between [1-" +
+                     swansonString::GetString(numRange) + "] be:";
          return swansonInput::GetInt(secretNumberPrompt,1,numRange);
       }
    }
