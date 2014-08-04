@@ -22,8 +22,7 @@ private:
    string secretNumberPrompt;
 
 public:
-   NumberGuess(void(*clearScreen)(), int numrange)
-   :GuessGame<int>(clearScreen),numRange(numrange){
+   NumberGuess( int numrange ): numRange(numrange){
       secretNumberPrompt = "What should the secret number between [1-" +
             swansonString::GetString(numRange) + "] be:";
       inputPrompt= "What is your next guess:";

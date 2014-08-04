@@ -11,6 +11,7 @@
 #include <set>
 #include "SwansonLibs/swansonInput.hpp"
 #include "SwansonLibs/swansonString.hpp"
+#include "SwansonLibs/swansonUtils.hpp"
 using namespace std;
 
 template <typename Type>
@@ -39,11 +40,15 @@ protected:
 
 public:
 
-   GuessGame(void(*clearScreen)()):ClearScreen(clearScreen),
+   GuessGame():ClearScreen(swansonUtil::ClearScreen),
       MaxGuesses(MaxGuessDefault){};
 
    void SetMaxGuesses(int maxGuesses){
       MaxGuesses=maxGuesses;
+   }
+
+   void SetClearScreen(void(*clrScrn)()){
+      ClearScreen = clrScrn;
    }
 
    void PlayGame(){

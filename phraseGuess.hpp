@@ -25,8 +25,7 @@ private:
    }
 
 public:
-   PhraseGuess ( void (*clearScreen) (), Dictionary dict ) :
-            StringGuess( clearScreen, dict){
+   PhraseGuess ( Dictionary dict ): StringGuess( dict ){
 
       welcomeMessage = "Welcome to phrase guess good luck!";
       inputPrompt =

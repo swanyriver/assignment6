@@ -21,15 +21,14 @@ using namespace std;
 
 class StringGuess: public GuessGame<string> {
 protected:
-   const int MAX_WORD_LENGTH;
+   int MAX_WORD_LENGTH;
    static const int USER_MIN_LENGTH = 4;
    Dictionary myDict;
    string correctGuessDefault;
    string secretPrompt;
 
 public:
-   StringGuess ( void (*clearScreen) (), Dictionary dict ) :
-         GuessGame<string>(clearScreen ), myDict(dict),
+   StringGuess ( Dictionary dict ) : myDict(dict),
          MAX_WORD_LENGTH(dict.getMaxWordLenght()){
 
       myDict.AddAlphabet();
@@ -37,6 +36,12 @@ public:
       IncorectGuess = "That was incorrect";
       correctGuessDefault = "Good Job that was in the secret";
       secretPrompt = "What should the secret be:";
+   }
+
+   void SetDictionary(Dictionary dict){
+      myDict=dict;
+      myDict.AddAlphabet();
+      MAX_WORD_LENGTH=dict.getMaxWordLenght();
    }
 
 protected:

@@ -55,22 +55,20 @@ int main( int argc , char* argv[] ){
       myMenu.setClear(clearScreen);
    }
 
-   //seed random
    swansonUtil::SeedRandom();
 
-
+   //instance a dictionary
    Dictionary myDict(MAX_WORD_LENGTH);
    if ( !myDict.Filled() )
       myDict = PreFabDict::UsePreFabDict();
 
-   myNumberGame = new NumberGuess(clearScreen,50);
-   myWordGame = new WordGuess(clearScreen,myDict);
-   myPhraseGame = new PhraseGuess(clearScreen,myDict);
+   //instance 3 games
+   myNumberGame = new NumberGuess(50);
+   myWordGame = new WordGuess(myDict);
+   myPhraseGame = new PhraseGuess(myDict);
 
 
-  // myMenu.addItem(new GameItem( myNumberGame,"Number Guess"));
-  // myMenu.addItem(new GameItem( myWordGame,"Word Guess"));
-  // myMenu.addItem(new GameItem( myPhraseGame,"Phrase Guess"));
+   ///filling menu
    myMenu.addItem(new GoItem( PlayNumberGuess,"NumberGuess","",AGAIN));
    myMenu.addItem(new GoItem( PlayWordGuess,"Word Guess","",AGAIN));
    myMenu.addItem(new GoItem( PlayPhraseGuess,"Phrase Guess","",AGAIN));
