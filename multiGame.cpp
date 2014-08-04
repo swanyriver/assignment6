@@ -43,17 +43,11 @@ void PlayPhraseGuess();
 int main( int argc , char* argv[] ){
 
    const int MAX_WORD_LENGTH = 7;
-   void (*clearScreen)() = swansonUtil::ClearScreen;
    Menu myMenu(INTRO);
 
    ///process command line arguments//////////////
    //args passed to ARGinAttor
    ARGinAttor myARGinAttor( argc , argv);
-   //check Arginators arguement set<string> for -s SIMPLE MODE
-   if(myARGinAttor.ArgumentPassedIn(SIMPLE_MODE)){
-      clearScreen=swansonUtil::HackClearScreen;
-      myMenu.setClear(clearScreen);
-   }
 
    swansonUtil::SeedRandom();
 
@@ -66,6 +60,14 @@ int main( int argc , char* argv[] ){
    myNumberGame = new NumberGuess(50);
    myWordGame = new WordGuess(myDict);
    myPhraseGame = new PhraseGuess(myDict);
+
+   //check Arginators arguement set<string> for -s SIMPLE MODE
+   if(myARGinAttor.ArgumentPassedIn(SIMPLE_MODE)){
+      myMenu.setClear(swansonUtil::HackClearScreen);
+      myNumberGame->SetClearScreen(swansonUtil::HackClearScreen);
+      myWordGame->SetClearScreen(swansonUtil::HackClearScreen);
+      myPhraseGame->SetClearScreen(swansonUtil::HackClearScreen);
+   }
 
 
    ///filling menu
