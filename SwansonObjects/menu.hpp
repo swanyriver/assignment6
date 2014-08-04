@@ -225,4 +225,39 @@ public:
 
 };
 
+//itterator menu item
+
+class ListItem:public MenuItem{
+private:
+   vector<string> myList;
+   int position;
+   string titleBase;
+
+   string getListString(){
+      return " [" + myList.at(position) + "]";
+   }
+
+public:
+   ListItem(vector<string> listIncoming, string titleB ,int pos)
+      :MenuItem("",""), myList(listIncoming),position(pos),
+       titleBase(titleB){
+
+      itemRepeat=false;
+      hasIntro=false;
+
+      this->title=titleBase+getListString();
+   }
+
+   void ItemSelected(){
+      if(position==myList.size()-1) position=0;
+      else position++;
+      this->title=titleBase+getListString();
+   }
+
+   string GetSelection(){
+      return myList.at(position);
+   }
+
+};
+
 #endif /*MENU_HPP_ */
