@@ -94,7 +94,6 @@ private:
 
    void Display(string message){
       ClearScreen();
-      //todo, fix this!!
 
       string remainingStr;
       for(int x=0;x<guessRemaining;x++) remainingStr+= " ?";

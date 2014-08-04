@@ -18,7 +18,6 @@
 #include "NumberGuess.hpp"
 #include "wordGuess.hpp"
 #include "phraseGuess.hpp"
-#include "GameClass.hpp"
 
 
 using namespace std;
@@ -66,8 +65,8 @@ int main( int argc , char* argv[] ){
       usePreFabDict(myDict);
 
    myNumberGame = new NumberGuess(clearScreen,50);
-   myWordGame = new WordGuess(clearScreen,myDict,MAX_WORD_LENGTH);
-   myPhraseGame = new PhraseGuess(clearScreen,myDict,MAX_WORD_LENGTH);
+   myWordGame = new WordGuess(clearScreen,myDict);
+   myPhraseGame = new PhraseGuess(clearScreen,myDict);
 
 
   // myMenu.addItem(new GameItem( myNumberGame,"Number Guess"));

@@ -14,8 +14,8 @@
 class WordGuess: public StringGuess{
 public:
 
-   WordGuess ( void (*clearScreen) (), Dictionary dict , int maxLength ) :
-         StringGuess( clearScreen, dict, maxLength ){
+   WordGuess ( void (*clearScreen) (), Dictionary dict ) :
+         StringGuess( clearScreen, dict){
 
       this->welcomeMessage = "Welcome to word guess good luck!";
       this->inputPrompt = "Enter a letter or be brave and try to guess the word:";

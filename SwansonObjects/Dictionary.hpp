@@ -33,6 +33,7 @@ class Dictionary {
 private:
    set<string> wordSet;
    set<string>::iterator lookup;
+   int MAX_WORD_LENGTH;
 
 public:
    void AddAlphabet(){
@@ -43,10 +44,20 @@ public:
    void AddWord(string word){
       wordSet.insert(word);
    }
+   int getMaxWordLenght(){
+      return MAX_WORD_LENGTH;
+   }
 
 protected:
 
    bool constructionWasSuccesfull;
+
+   void DetermineLongestWord(){
+      MAX_WORD_LENGTH=0;
+      for(set<string>::iterator it=wordSet.begin(); it!=wordSet.end(); it++){
+         if(it->length()>MAX_WORD_LENGTH) MAX_WORD_LENGTH = it->length();
+      }
+   }
 
    /**************************************************************
     *
@@ -102,6 +113,10 @@ protected:
       //words added  //close file
       instream.close();
 
+      if(MaxWordLength==UNRESTRICTED){
+         DetermineLongestWord();
+      }
+
       if ( wordSet.empty() )
          return false;
 
@@ -115,16 +130,17 @@ public:
    static const string OUT_OF_BOUNDS;
 
    ///constructors
-   Dictionary ( bool dummy ) {
+   Dictionary ( bool dummy ){
       constructionWasSuccesfull = false; //used to instantiate an empty dictionary
+
    }
-   Dictionary ( int maxWordLenght = UNRESTRICTED , string filename =
-         "dictionary.txt" , bool construct = true ) {
+   Dictionary ( int maxWordLength = UNRESTRICTED , string filename =
+         "dictionary.txt" , bool construct = true ):MAX_WORD_LENGTH(maxWordLength) {
       //inflates on construction by default
       //sub classes can override ReadFromFile() method, and must call inflate
       //in their own constructors
       if ( construct )
-         constructionWasSuccesfull = InflateDict( filename , maxWordLenght );
+         constructionWasSuccesfull = InflateDict( filename , maxWordLength );
       else
          constructionWasSuccesfull = false;
    }
@@ -133,6 +149,7 @@ public:
    Dictionary ( set<string> PreFabSet ) :
          wordSet( PreFabSet ), constructionWasSuccesfull( true ) {
       if(wordSet.size()==0) constructionWasSuccesfull = false;
+      DetermineLongestWord();
    }
 
    bool Filled () {

@@ -28,9 +28,9 @@ protected:
    string secretPrompt;
 
 public:
-   StringGuess ( void (*clearScreen) (), Dictionary dict , int maxLength ) :
+   StringGuess ( void (*clearScreen) (), Dictionary dict ) :
          GuessGame<string>(clearScreen ), myDict(dict),
-         MAX_WORD_LENGTH(maxLength){
+         MAX_WORD_LENGTH(dict.getMaxWordLenght()){
 
       myDict.AddAlphabet();
 
